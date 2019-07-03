@@ -10,6 +10,18 @@
   	unset($_SESSION['username']);
   	header("location: login.php");
   }
+
+  $myHead ="";
+  $myHead = $_POST["myHead"];
+  $form_name = "";
+  $db = mysqli_connect('localhost', 'root', '', 'registration');
+
+  $username = $_SESSION['username'];
+
+  $query2 = "INSERT INTO saveform(username,form,formname)
+             VALUES('$username','$myHead','$form_name)";
+  mysqli_query($db,$query2);           
+  echo "form saved";           
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,14 +32,16 @@
 
      var tcounter = 0;
      var dcounter = 0;
-     var myhead = [];
 
      function addTitle(divName){
       if(tcounter==1){
         alert("A form can have only one name");
       }
       else{
-        var name = document.getElementById('text');
+          var name = document.getElementById('text');
+          <?php
+            $form_name = $myHead[0];
+          ?>  
           var newdiv = document.createElement('div');
           newdiv.innerHTML = name.value;
           document.getElementById(divName).appendChild(newdiv);
@@ -40,7 +54,7 @@
         alert("A form can have only one description field");
       }
       else{
-        var name = document.getElementById('text');
+          var name = document.getElementById('text');
           var newdiv = document.createElement('div');
           newdiv.innerHTML = name.value;
           document.getElementById(divName).appendChild(newdiv);
@@ -50,15 +64,13 @@
      }
      function addText(divName){
           var name = document.getElementById('text');
-          myhead.push(name);
           var newdiv = document.createElement('div');
           newdiv.innerHTML = name.value + " <br><input type='text' name='myInputs[]'>";
           document.getElementById(divName).appendChild(newdiv);
           name.value="";
      }
      function addRadio(divName){
-          var name = document.getElementById('text');
-          myhead.push(name);
+          var name = document.getElementById('text'); 
           var newdiv = document.createElement('div');
           newdiv.innerHTML = name.value + " <input type='radio' name='myInputs[]'>";
           document.getElementById(divName).appendChild(newdiv);
@@ -66,7 +78,6 @@
      }
      function addCheckbox(divName){
           var name = document.getElementById('text');
-          myhead.push(name);
           var newdiv = document.createElement('div');
           newdiv.innerHTML = name.value + " <input type='checkbox' name='myInputs[]'>";
           document.getElementById(divName).appendChild(newdiv);
@@ -74,9 +85,8 @@
      }
      function addTextarea(divName){
           var name = document.getElementById('text');
-          myhead.push(name);
           var newdiv = document.createElement('div');
-          newdiv.innerHTML = name.value + " <br><textarea name='myInputs[]'>type here...</textarea>";
+          newdiv.innerHTML = name.value + " <br><textarea name='myInputs[]'></textarea>";
           document.getElementById(divName).appendChild(newdiv);
           name.value="";
      }
@@ -107,20 +117,20 @@
     	<p> <a href="index.php?logout='1'" style="color: red;">logout</a> </p>
     <?php endif ?>
 </div>
-    <form method="POST" action="submit.php">
+    <form method="POST" action="index.php">
       <div class="header1">
         <h2>Web Form</h2>
       </div>  
        <div id="dynamicInput">
        </div>
-       <input type="text" name="myhead" id="text">
+       <input type="text" name="myHead[]" id="text">
        <input type="button" value="Add title" onClick="addTitle('dynamicInput');">
        <input type="button" value="Add description" onClick="addDescription('dynamicInput');">       
        <input type="button" value="Add text input" onClick="addText('dynamicInput');">
        <input type="button" value="Add radio input" onClick="addRadio('dynamicInput');">
        <input type="button" value="Add checkbox input" onClick="addCheckbox('dynamicInput');">
        <input type="button" value="Add textarea input" onClick="addTextarea('dynamicInput');">
-       <input type="submit" name="submit" value="save form">
+       <input type="submit" name="submit" value="submit">
     </form>
 		
 </body>
